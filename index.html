@@ -115,8 +115,32 @@ nav.opaque {
 }
 .brand-gem {
   width: 40px; height: 40px; position: relative; flex-shrink: 0;
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgba(0,245,255,0.55), rgba(168,85,247,0.55));
+  padding: 1.5px;
 }
-.brand-gem svg { width: 100%; height: 100%; }
+.brand-gem-inner {
+  width: 100%; height: 100%;
+  border-radius: 999px;
+  background: rgba(7,10,20,0.9);
+  border: 1px solid rgba(255,255,255,0.06);
+  overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+}
+.brand-gem img {
+  width: 100%; height: 100%; object-fit: contain;
+  display: block;
+}
+.brand-gem-fallback {
+  font-family: var(--font-d);
+  font-weight: 900;
+  font-size: 13px;
+  letter-spacing: 0.02em;
+  background: linear-gradient(135deg, var(--c1), var(--c2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
 .brand-info { line-height: 1.2; }
 .brand-name {
   font-family: var(--font-d); font-weight: 800; font-size: 1rem;
@@ -844,16 +868,14 @@ footer {
 <nav id="nav">
   <a href="#" class="nav-brand">
     <div class="brand-gem">
-      <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <linearGradient id="lg1" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
-            <stop offset="0%" stop-color="#00f5ff"/>
-            <stop offset="100%" stop-color="#a855f7"/>
-          </linearGradient>
-        </defs>
-        <path d="M20 3 L37 12 L37 28 L20 37 L3 28 L3 12 Z" stroke="url(#lg1)" stroke-width="1.5" fill="rgba(0,245,255,0.06)"/>
-        <text x="50%" y="56%" text-anchor="middle" dominant-baseline="middle" font-family="Clash Display,Raleway,sans-serif" font-weight="900" font-size="13" fill="url(#lg1)">MR</text>
-      </svg>
+      <div class="brand-gem-inner">
+        <img
+          src="logo.png"
+          alt="Mizanur Rahman logo"
+          onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
+        />
+        <span class="brand-gem-fallback" style="display:none;">MR</span>
+      </div>
     </div>
     <div class="brand-info">
       <div class="brand-name">Mizanur Rahman</div>
@@ -887,7 +909,7 @@ footer {
       </div>
 
       <h1 class="hero-name">
-        <span class="line1">Md. Mizanur</span>
+        <span class="line1">Mizanur</span>
         <span class="line2">Rahman</span>
       </h1>
 
@@ -941,23 +963,9 @@ footer {
         <div class="photo-inner">
           <img
             src="photo.jpg"
-            alt="Md. Mizanur Rahman — AI Developer"
+            alt="Mizanur Rahman — AI Developer"
             onerror="this.style.display='none';"
           />
-        </div>
-        <div class="hero-badge">
-          <div class="badge-avatar">
-            <img
-              src="logo.png"
-              alt="Logo"
-              onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=\'badge-avatar-fallback\'>MR</div>';"
-            />
-          </div>
-          <div class="badge-info">
-            <div class="badge-name">Md. Mizanur Rahman</div>
-            <div class="badge-role">AI Dev · BRAC MSc CSE</div>
-          </div>
-          <div class="badge-dot"></div>
         </div>
       </div>
     </div>
@@ -1331,7 +1339,7 @@ footer {
 
 <!-- ═══ FOOTER ═══ -->
 <footer>
-  <div class="footer-l">© 2026 Md. Mizanur Rahman · All rights reserved</div>
+  <div class="footer-l">© 2026 Mizanur Rahman · All rights reserved</div>
   <div class="footer-r">Crafted in Dhaka, Bangladesh <span>🇧🇩</span></div>
 </footer>
 

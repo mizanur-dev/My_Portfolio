@@ -11,6 +11,12 @@
 <!-- Fallback fonts if Clash/Cabinet not available -->
 <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700;800;900&family=Nunito+Sans:wght@300;400;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
 
+<script>
+  // Ensure the loader is visible on first paint.
+  document.documentElement.classList.add('is-loading');
+  window.__loadStart = performance.now();
+</script>
+
 <style>
 /* ═══════════════════════════════════════════════════
    DESIGN SYSTEM — BIOLUMINESCENT DEEP SPACE GLASS
@@ -53,6 +59,114 @@ body {
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   cursor: none;
+}
+
+/* ════════════════════════════════════════
+   LOADER (FIRST ENTER / RELOAD)
+════════════════════════════════════════ */
+.page-loader {
+  position: fixed; inset: 0; z-index: 10000;
+  display: grid; place-items: center;
+  background:
+    radial-gradient(1200px 600px at 20% 30%, rgba(0,245,255,0.12), transparent 60%),
+    radial-gradient(900px 500px at 80% 60%, rgba(168,85,247,0.12), transparent 62%),
+    rgba(3,4,10,0.92);
+  backdrop-filter: blur(24px) saturate(170%);
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.6s var(--ease), transform 0.6s var(--ease);
+  transform: translateY(6px);
+}
+html.is-loading .page-loader {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+html.is-loading body { overflow: hidden; }
+html.is-loading #cursor, html.is-loading #cursor-ring { opacity: 0; }
+
+.loader-card {
+  width: min(520px, calc(100vw - 48px));
+  padding: 26px 26px 22px;
+  border-radius: 24px;
+  background: rgba(7,10,20,0.72);
+  border: 1px solid rgba(0,245,255,0.16);
+  box-shadow: 0 40px 140px rgba(0,0,0,0.75), inset 0 1px 0 rgba(255,255,255,0.05);
+}
+.loader-top {
+  display: flex; align-items: center; gap: 14px;
+}
+.loader-mark {
+  width: 48px; height: 48px;
+  border-radius: 999px;
+  background: conic-gradient(from 0deg, var(--c1), var(--c2), var(--c3), var(--c1));
+  padding: 2px;
+  animation: loaderSpin 1.3s linear infinite;
+  flex-shrink: 0;
+}
+.loader-mark-inner {
+  width: 100%; height: 100%;
+  border-radius: 999px;
+  background: rgba(3,4,10,0.92);
+  overflow: hidden;
+  display: grid; place-items: center;
+}
+.loader-mark-inner img {
+  width: 100%; height: 100%; object-fit: contain;
+  display: block;
+}
+.loader-mark-fallback {
+  font-family: var(--font-d);
+  font-weight: 900;
+  font-size: 14px;
+  letter-spacing: 0.02em;
+  background: linear-gradient(135deg, var(--c1), var(--c2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+@keyframes loaderSpin { to { transform: rotate(360deg); } }
+
+.loader-title {
+  font-family: var(--font-d);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+.loader-sub {
+  margin-top: 2px;
+  font-family: var(--font-m);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--silver);
+  opacity: 0.85;
+}
+.loader-bar {
+  margin-top: 18px;
+  height: 10px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.07);
+  overflow: hidden;
+}
+.loader-bar > span {
+  display: block;
+  height: 100%;
+  width: 42%;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--c1), var(--c2));
+  filter: saturate(1.1);
+  animation: loaderSweep 1.05s ease-in-out infinite;
+}
+@keyframes loaderSweep {
+  0% { transform: translateX(-45%); opacity: 0.55; }
+  50% { opacity: 1; }
+  100% { transform: translateX(170%); opacity: 0.65; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loader-mark, .loader-bar > span { animation: none; }
+  .page-loader { transition: opacity 0.2s linear; transform: none; }
 }
 
 /* ── CUSTOM CURSOR ── */
@@ -857,6 +971,29 @@ footer {
 </head>
 <body>
 
+<!-- ═══ LOADER ═══ -->
+<div class="page-loader" id="page-loader" role="status" aria-live="polite" aria-label="Loading">
+  <div class="loader-card">
+    <div class="loader-top">
+      <div class="loader-mark" aria-hidden="true">
+        <div class="loader-mark-inner">
+          <img
+            src="logo.png"
+            alt=""
+            onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
+          />
+          <span class="loader-mark-fallback" style="display:none;">MR</span>
+        </div>
+      </div>
+      <div>
+        <div class="loader-title">Preparing Experience</div>
+        <div class="loader-sub">Initializing · Assets · Effects</div>
+      </div>
+    </div>
+    <div class="loader-bar" aria-hidden="true"><span></span></div>
+  </div>
+</div>
+
 <!-- Cursor -->
 <div id="cursor"></div>
 <div id="cursor-ring"></div>
@@ -1359,6 +1496,28 @@ function animCursor() {
   requestAnimationFrame(animCursor);
 }
 animCursor();
+
+/* ── LOADER HIDE ── */
+(function () {
+  const MIN_MS = 650;
+  const loader = document.getElementById('page-loader');
+  if (!loader) {
+    document.documentElement.classList.remove('is-loading');
+    return;
+  }
+
+  function hideLoader() {
+    const elapsed = (performance.now() - (window.__loadStart || 0));
+    const wait = Math.max(0, MIN_MS - elapsed);
+    window.setTimeout(() => {
+      document.documentElement.classList.remove('is-loading');
+      window.setTimeout(() => { loader.style.display = 'none'; }, 700);
+    }, wait);
+  }
+
+  if (document.readyState === 'complete') hideLoader();
+  else window.addEventListener('load', hideLoader, { once: true });
+})();
 
 /* ── PARTICLE CANVAS ── */
 const canvas = document.getElementById('canvas');

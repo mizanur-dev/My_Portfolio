@@ -3,10 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Md. Mizanur Rahman — AI Developer</title>
+  <title>Mizanur Rahman — AI Developer</title>
   <meta name="description" content="Junior AI Developer @ Join Venture AI. Specializing in RAG, Computer Vision, and GenAI." />
 
   <script>
+    window.__loaderT0 = (window.performance && performance.now) ? performance.now() : Date.now();
     document.documentElement.classList.add('js', 'is-loading');
   </script>
   
@@ -557,7 +558,7 @@
       <div class="sb-profile">
         <div class="sb-photo-wrap">
           <div class="sb-photo-ring"></div>
-          <img src="photo.jpg" alt="Md. Mizanur Rahman" class="sb-photo" onerror="this.style.display='none'">
+          <img src="photo.jpg" alt="Mizanur Rahman" class="sb-photo" onerror="this.style.display='none'">
           <div class="sb-logo">
             <img src="logo.png" alt="" style="width:100%;height:100%;object-fit:contain;" onerror="this.style.display='none'; this.parentElement.innerHTML='<span style=\'font-size:10px;color:#f8fafc;font-family:sans-serif;display:grid;place-items:center;height:100%;\'>MR</span>'">
           </div>
@@ -585,7 +586,7 @@
         <a href="https://twitter.com/MdMizan15698614" target="_blank" class="soc-btn mag-btn"><svg viewBox="0 0 24 24"><path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/></svg></a>
         <a href="https://sites.google.com/view/mdmizanurrahman/home" target="_blank" class="soc-btn mag-btn"><svg viewBox="0 0 24 24"><path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm-2 16h-2v-6h2v6zm-1-6.891c-.607 0-1.1-.496-1.1-1.109 0-.612.492-1.109 1.1-1.109s1.1.497 1.1 1.109c0 .613-.493 1.109-1.1 1.109zm8 6.891h-1.998v-2.861c0-1.881-2.002-1.722-2.002 0v2.861h-2v-6h2v1.093c.872-1.616 4-1.736 4 1.548v3.359z"/></svg></a>
       </div>
-      <div class="sb-footer">Dhaka, Bangladesh 🇧🇩</div>
+      <div class="sb-footer">Dhaka, Bangladesh</div>
     </aside>
 
     <!-- MAIN CONTENT -->
@@ -936,11 +937,23 @@ decision → FitnessScore + ExercisePlan
   ════════════════════════════════════════════════════════════ -->
   <script>
     // ⓪ Page Loader
-    window.addEventListener('load', () => {
+    function hideLoaderWithDelay() {
       const loader = document.getElementById('page-loader');
-      if (loader) loader.classList.add('hidden');
-      document.documentElement.classList.remove('is-loading');
-    }, { once: true });
+      const t0 = (typeof window.__loaderT0 === 'number') ? window.__loaderT0 : ((window.performance && performance.now) ? performance.now() : Date.now());
+      const tNow = (window.performance && performance.now) ? performance.now() : Date.now();
+      const elapsed = Math.max(0, tNow - t0);
+
+      const MIN_VISIBLE_MS = 650;
+      const POSTLOAD_DELAY_MS = 220;
+      const delay = Math.max(POSTLOAD_DELAY_MS, MIN_VISIBLE_MS - elapsed);
+
+      window.setTimeout(() => {
+        if (loader) loader.classList.add('hidden');
+        document.documentElement.classList.remove('is-loading');
+      }, delay);
+    }
+
+    window.addEventListener('load', hideLoaderWithDelay, { once: true });
     window.addEventListener('pageshow', (e) => {
       if (!e.persisted) return;
       const loader = document.getElementById('page-loader');
@@ -970,6 +983,14 @@ decision → FitnessScore + ExercisePlan
     let w, h, parts = [];
     const colors =['#eab308', '#facc15', '#ca8a04', '#fef08a', '#22d3ee', '#67e8f9'];
 
+    let isScrolling = false;
+    let scrollIdleTimer = 0;
+    window.addEventListener('scroll', () => {
+      isScrolling = true;
+      window.clearTimeout(scrollIdleTimer);
+      scrollIdleTimer = window.setTimeout(() => { isScrolling = false; }, 140);
+    }, { passive: true });
+
     function resize() { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; }
     window.addEventListener('resize', resize);
     resize();
@@ -988,30 +1009,37 @@ decision → FitnessScore + ExercisePlan
         this.x += this.vx; this.y += this.vy; this.life -= 0.0012;
         if (this.life < 0 || this.x < 0 || this.x > w || this.y < 0 || this.y > h) this.reset();
       }
-      draw() {
+      draw(lowQuality) {
         ctx.globalAlpha = this.alpha * this.life;
         ctx.fillStyle = this.color;
-        ctx.shadowBlur = 14; ctx.shadowColor = this.color;
+        ctx.shadowBlur = lowQuality ? 0 : 14;
+        ctx.shadowColor = this.color;
         ctx.beginPath(); ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2); ctx.fill();
       }
     }
-    for (let i = 0; i < 120; i++) parts.push(new Particle());
+    const PART_COUNT = window.matchMedia('(max-width: 960px)').matches ? 80 : 120;
+    for (let i = 0; i < PART_COUNT; i++) parts.push(new Particle());
 
     function drawParticles() {
+      const lowQuality = isScrolling;
       ctx.clearRect(0, 0, w, h);
       ctx.lineWidth = 0.5;
-      for (let i = 0; i < parts.length; i++) {
-        for (let j = i + 1; j < parts.length; j++) {
-          const dx = parts[i].x - parts[j].x; const dy = parts[i].y - parts[j].y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < 95) {
-            ctx.globalAlpha = (1 - dist / 95) * 0.058 * parts[i].life * parts[j].life;
-            ctx.strokeStyle = '#eab308';
-            ctx.beginPath(); ctx.moveTo(parts[i].x, parts[i].y); ctx.lineTo(parts[j].x, parts[j].y); ctx.stroke();
+
+      if (!lowQuality) {
+        for (let i = 0; i < parts.length; i++) {
+          for (let j = i + 1; j < parts.length; j++) {
+            const dx = parts[i].x - parts[j].x; const dy = parts[i].y - parts[j].y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < 95) {
+              ctx.globalAlpha = (1 - dist / 95) * 0.058 * parts[i].life * parts[j].life;
+              ctx.strokeStyle = '#eab308';
+              ctx.beginPath(); ctx.moveTo(parts[i].x, parts[i].y); ctx.lineTo(parts[j].x, parts[j].y); ctx.stroke();
+            }
           }
         }
       }
-      parts.forEach(p => { p.update(); p.draw(); });
+
+      parts.forEach(p => { p.update(); p.draw(lowQuality); });
       requestAnimationFrame(drawParticles);
     }
     drawParticles();

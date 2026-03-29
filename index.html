@@ -5,6 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Md. Mizanur Rahman — AI Developer</title>
   <meta name="description" content="Junior AI Developer @ Join Venture AI. Specializing in RAG, Computer Vision, and GenAI." />
+
+  <script>
+    document.documentElement.classList.add('js', 'is-loading');
+  </script>
   
   <link rel="icon" type="image/png" href="logo.png">
 
@@ -139,6 +143,42 @@
       position: fixed; inset: 0; z-index: 9997; pointer-events: none;
       background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
       opacity: 0.018; mix-blend-mode: overlay;
+    }
+
+    html.is-loading, html.is-loading body { overflow: hidden; }
+    #page-loader {
+      position: fixed; inset: 0; z-index: 10050;
+      display: grid; place-items: center;
+      background:
+        radial-gradient(900px 520px at 25% 18%, rgba(234,179,8,0.08), transparent 58%),
+        radial-gradient(860px 520px at 75% 65%, rgba(34,211,238,0.06), transparent 60%),
+        var(--void);
+      opacity: 0; visibility: hidden; pointer-events: none;
+      transition: opacity 0.55s var(--ease), visibility 0s linear 0.55s;
+    }
+    html.is-loading #page-loader {
+      opacity: 1; visibility: visible; pointer-events: auto;
+      transition: opacity 0.12s var(--ease), visibility 0s;
+    }
+    #page-loader.hidden {
+      opacity: 0; visibility: hidden; pointer-events: none;
+      transition: opacity 0.55s var(--ease), visibility 0s linear 0.55s;
+    }
+    .loader-box { display: grid; place-items: center; gap: 14px; text-align: center; }
+    .loader-spinner {
+      width: 56px; height: 56px; border-radius: 50%;
+      background: conic-gradient(from 180deg, var(--am), var(--cy), var(--am-l), var(--am));
+      -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 7px), #000 0);
+      mask: radial-gradient(farthest-side, transparent calc(100% - 7px), #000 0);
+      animation: loaderSpin 0.9s linear infinite;
+      box-shadow: 0 0 24px var(--am-g);
+    }
+    .loader-txt { font-family: var(--font-code); font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--tx-2); }
+    .loader-txt b { color: var(--am-l); font-weight: 600; }
+    @keyframes loaderSpin { to { transform: rotate(360deg); } }
+    @media (prefers-reduced-motion: reduce) {
+      .loader-spinner { animation: none; }
+      #page-loader, #page-loader.hidden { transition: none; }
     }
 
     #particles { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
@@ -385,8 +425,22 @@
     .pj-06 { grid-column: 1 / 7; grid-row: 5 / 7; }
     .pj-07 { grid-column: 7 / 13; grid-row: 5 / 7; }
 
-    .p-num { font-family: var(--font-disp); font-weight: 900; font-size: 4rem; color: rgba(234,179,8,0.06); line-height: 1; margin-bottom: 16px; transition: color 0.4s; pointer-events: none; }
-    .glass-card:hover .p-num { color: rgba(234,179,8,0.12); }
+    .p-num {
+      font-family: var(--font-disp);
+      font-weight: 900;
+      font-size: 4rem;
+      line-height: 1;
+      margin-bottom: 16px;
+      pointer-events: none;
+      color: rgba(234,179,8,0.18);
+      background: linear-gradient(135deg, var(--am-ll), var(--am), var(--am-d));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      opacity: 0.22;
+      transition: opacity 0.4s var(--ease);
+    }
+    .glass-card:hover .p-num { opacity: 0.38; }
     .p-badge { align-self: flex-start; font-family: var(--font-code); font-size: var(--fs-xs); text-transform: uppercase; padding: 4px 12px; border-radius: 100px; background: var(--am-gs); border: 1px solid var(--rim-a2); color: var(--am-l); margin-bottom: 16px; }
     .p-title { font-family: var(--font-disp); font-weight: 800; font-size: var(--fs-lg); color: var(--tx-0); line-height: 1.1; margin-bottom: 12px; }
     .p-desc { font-weight: 300; font-size: var(--fs-base); color: var(--tx-1); line-height: 1.6; margin-bottom: 24px; flex-grow: 1; }
@@ -476,6 +530,14 @@
   </style>
 </head>
 <body>
+
+  <!-- Page Loader -->
+  <div id="page-loader" role="status" aria-live="polite" aria-label="Loading">
+    <div class="loader-box">
+      <div class="loader-spinner" aria-hidden="true"></div>
+      <div class="loader-txt"><b>Loading</b> portfolio</div>
+    </div>
+  </div>
 
   <!-- Overlays -->
   <div class="grain"></div>
@@ -873,6 +935,19 @@ decision → FitnessScore + ExercisePlan
        JAVASCRIPT
   ════════════════════════════════════════════════════════════ -->
   <script>
+    // ⓪ Page Loader
+    window.addEventListener('load', () => {
+      const loader = document.getElementById('page-loader');
+      if (loader) loader.classList.add('hidden');
+      document.documentElement.classList.remove('is-loading');
+    }, { once: true });
+    window.addEventListener('pageshow', (e) => {
+      if (!e.persisted) return;
+      const loader = document.getElementById('page-loader');
+      if (loader) loader.classList.add('hidden');
+      document.documentElement.classList.remove('is-loading');
+    });
+
     // ① Custom Cursor
     const dot = document.getElementById('cursor-dot');
     const ring = document.getElementById('cursor-ring');

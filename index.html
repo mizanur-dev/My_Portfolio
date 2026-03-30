@@ -809,7 +809,7 @@ img, .sb-avatar-wrap img, .hero-bg img {
   position:relative;z-index:1;
 }
 .c-mail-card{
-  background:rgba(255,255,255,0.025);
+  background:rgba(7,8,11,0.72);
   border:1px solid var(--b0);
   border-radius:22px;
   padding:26px 22px;
@@ -873,6 +873,7 @@ img, .sb-avatar-wrap img, .hero-bg img {
   transition:border-color .2s, box-shadow .2s, background .2s;
 }
 .c-inp::placeholder, .c-ta::placeholder{color:var(--t3);}
+.c-inp::placeholder, .c-ta::placeholder{color:rgba(241,245,249,0.22);}
 .c-inp:focus, .c-ta:focus{
   border-color:var(--ba);
   background:rgba(245,158,11,0.03);
@@ -959,6 +960,42 @@ img, .sb-avatar-wrap img, .hero-bg img {
   margin-bottom:6px;
 }
 .c-success p{font-size:0.86rem;color:var(--t1);line-height:1.6;}
+
+/* Modal (Email Me popup) */
+.c-modal{
+  position:fixed;inset:0;
+  display:none;
+  align-items:center;justify-content:center;
+  padding:24px;
+  z-index:99990;
+}
+.c-modal.open{display:flex;}
+.c-modal-backdrop{
+  position:absolute;inset:0;
+  background:rgba(7,8,11,0.72);
+  backdrop-filter:blur(22px) saturate(160%);
+}
+.c-modal-dialog{
+  position:relative;z-index:1;
+  width:100%;
+  max-width:560px;
+}
+.c-modal-close{
+  position:absolute;
+  top:-12px;right:-12px;
+  width:40px;height:40px;
+  border-radius:12px;
+  border:1px solid var(--b0);
+  background:rgba(7,8,11,0.8);
+  color:var(--t0);
+  cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.1rem;
+  transition:all .2s var(--ease);
+}
+.c-modal-close:hover{border-color:var(--ba);color:var(--a-l);background:rgba(245,158,11,0.08);}
+.c-btn{cursor:pointer;}
+.c-btn[type="button"]{appearance:none;}
 
 @media(max-width:520px){
   .c-mail-card{padding:22px 16px;}
@@ -1476,57 +1513,11 @@ footer{
       </h2>
       <p class="c-sub">Open to AI/ML engineering roles, research collaborations, and freelance projects. Based in Dhaka — available globally remote.</p>
 
-      <div class="c-mail">
-        <div class="c-mail-card">
-          <p class="c-eyebrow">Get in Touch</p>
-          <div class="c-mail-h">Send me a <span>message.</span></div>
-          <p class="c-mail-sub">Drop me a message and I'll get back to you soon.</p>
-
-          <form id="contact-form" class="c-mail-form" autocomplete="on">
-            <div class="c-field">
-              <label class="c-label" for="cf_name">Your Name</label>
-              <input class="c-inp" id="cf_name" type="text" name="from_name" placeholder="John Doe" required />
-            </div>
-            <div class="c-field">
-              <label class="c-label" for="cf_email">Your Email</label>
-              <input class="c-inp" id="cf_email" type="email" name="reply_to" placeholder="john@example.com" required />
-            </div>
-            <div class="c-field">
-              <label class="c-label" for="cf_subject">Subject</label>
-              <input class="c-inp" id="cf_subject" type="text" name="subject" placeholder="Project / Collaboration" required />
-            </div>
-            <div class="c-field">
-              <label class="c-label" for="cf_message">Message</label>
-              <textarea class="c-ta" id="cf_message" name="message" placeholder="Tell me about your project or idea..." required></textarea>
-            </div>
-
-            <input class="c-hp" type="text" name="website" tabindex="-1" autocomplete="off" />
-            <input type="hidden" name="to_name" value="Mizanur Rahman" />
-            <input type="hidden" name="time" id="cf_time" value="" />
-
-            <button class="c-send" type="submit" id="contact-submit">
-              <span class="c-btntext">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-                Send Message
-              </span>
-              <div class="c-spinner" aria-hidden="true"></div>
-            </button>
-            <div id="contact-status" class="c-status" aria-live="polite"></div>
-          </form>
-
-          <div class="c-success" id="contact-success">
-            <div class="c-success-ico">✅</div>
-            <h3>Message Sent!</h3>
-            <p>Thanks for reaching out.<br/>I'll reply to you shortly.</p>
-          </div>
-        </div>
-      </div>
-
       <div class="c-links">
-        <a href="mailto:mizanur.rahman.1cse@gmail.com" class="c-btn primary">
+        <button type="button" class="c-btn primary" id="open-contact" aria-haspopup="dialog" aria-controls="contact-modal">
           <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
           Email Me
-        </a>
+        </button>
         <a href="https://www.linkedin.com/in/mizanur-dev/" target="_blank" class="c-btn">
           <svg fill="currentColor" viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
           LinkedIn
@@ -1554,6 +1545,61 @@ footer{
 
 </main>
 </div><!-- /shell -->
+
+<!-- CONTACT MODAL -->
+<div id="contact-modal" class="c-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Send a message">
+  <div class="c-modal-backdrop" data-close="contact-modal"></div>
+  <div class="c-modal-dialog">
+    <button class="c-modal-close" type="button" data-close="contact-modal" aria-label="Close">✕</button>
+    <div class="c-mail-card">
+      <p class="c-eyebrow">Get in Touch</p>
+      <div class="c-mail-h">Send me a <span>message.</span></div>
+      <p class="c-mail-sub">Drop me a message and I'll get back to you soon.</p>
+
+      <form id="contact-form" class="c-mail-form" autocomplete="on">
+        <div class="c-field">
+          <label class="c-label" for="cf_name">Your Name</label>
+          <input class="c-inp" id="cf_name" type="text" name="from_name" placeholder="John Doe" required />
+        </div>
+        <div class="c-field">
+          <label class="c-label" for="cf_email">Your Email</label>
+          <input class="c-inp" id="cf_email" type="email" name="reply_to" placeholder="john@example.com" required />
+        </div>
+        <div class="c-field">
+          <label class="c-label" for="cf_subject">Subject</label>
+          <input class="c-inp" id="cf_subject" type="text" name="subject" placeholder="Project / Collaboration" required />
+        </div>
+        <div class="c-field">
+          <label class="c-label" for="cf_message">Message</label>
+          <textarea class="c-ta" id="cf_message" name="message" placeholder="Tell me about your project or idea..." required></textarea>
+        </div>
+
+        <input class="c-hp" type="text" name="website" tabindex="-1" autocomplete="off" />
+        <input type="hidden" name="to_name" value="Mizanur Rahman" />
+        <input type="hidden" name="time" id="cf_time" value="" />
+        <input type="hidden" name="from_email" id="cf_from_email" value="" />
+        <input type="hidden" name="email_subject" id="cf_email_subject" value="" />
+        <input type="hidden" name="message_text" id="cf_message_text" value="" />
+        <input type="hidden" name="message_html" id="cf_message_html" value="" />
+
+        <button class="c-send" type="submit" id="contact-submit">
+          <span class="c-btntext">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            Send Message
+          </span>
+          <div class="c-spinner" aria-hidden="true"></div>
+        </button>
+        <div id="contact-status" class="c-status" aria-live="polite"></div>
+      </form>
+
+      <div class="c-success" id="contact-success">
+        <div class="c-success-ico">✅</div>
+        <h3>Message Sent!</h3>
+        <p>Thanks for reaching out.<br/>I'll reply to you shortly.</p>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script>
@@ -1683,6 +1729,40 @@ document.querySelectorAll('.btn-amber,.btn-ghost,.c-btn').forEach(b=>{
 
 /* ── EMAILJS CONTACT FORM ── */
 (()=>{
+  const modal=document.getElementById('contact-modal');
+  const openBtn=document.getElementById('open-contact');
+
+  const openModal=()=>{
+    if(!modal) return;
+    modal.classList.add('open');
+    modal.setAttribute('aria-hidden','false');
+    document.body.style.overflow='hidden';
+    resetContactUI();
+    const nameInput=document.getElementById('cf_name');
+    if(nameInput) setTimeout(()=>nameInput.focus(), 0);
+  };
+
+  const closeModal=()=>{
+    if(!modal) return;
+    modal.classList.remove('open');
+    modal.setAttribute('aria-hidden','true');
+    document.body.style.overflow='';
+  };
+
+  const onBackdropClick=(e)=>{
+    if(!modal) return;
+    if(e.target && e.target.getAttribute && e.target.getAttribute('data-close')==='contact-modal') closeModal();
+  };
+
+  const onKey=(e)=>{ if(e.key==='Escape') closeModal(); };
+
+  if(openBtn) openBtn.addEventListener('click', openModal);
+  if(modal){
+    modal.addEventListener('click', onBackdropClick);
+    modal.querySelectorAll('[data-close="contact-modal"]').forEach(el=>el.addEventListener('click', closeModal));
+  }
+  window.addEventListener('keydown', onKey);
+
   const form=document.getElementById('contact-form');
   if(!form) return;
 
@@ -1690,6 +1770,10 @@ document.querySelectorAll('.btn-amber,.btn-ghost,.c-btn').forEach(b=>{
   const submitBtn=document.getElementById('contact-submit') || form.querySelector('button[type="submit"]');
   const successEl=document.getElementById('contact-success');
   const timeEl=document.getElementById('cf_time');
+  const fromEmailEl=document.getElementById('cf_from_email');
+  const emailSubjectEl=document.getElementById('cf_email_subject');
+  const messageTextEl=document.getElementById('cf_message_text');
+  const messageHtmlEl=document.getElementById('cf_message_html');
 
   const SERVICE_ID='service_5xaexue';
   const TEMPLATE_ID='template_6xkgyre';
@@ -1699,6 +1783,24 @@ document.querySelectorAll('.btn-amber,.btn-ghost,.c-btn').forEach(b=>{
     if(!statusEl) return;
     statusEl.className='c-status'+(state?(' '+state):'');
     statusEl.textContent=text||'';
+  };
+
+  const escapeHtml=(str)=>String(str||'')
+    .replaceAll('&','&amp;')
+    .replaceAll('<','&lt;')
+    .replaceAll('>','&gt;')
+    .replaceAll('"','&quot;')
+    .replaceAll("'",'&#39;');
+
+  const resetContactUI=()=>{
+    if(!form) return;
+    form.style.display='block';
+    if(successEl) successEl.classList.remove('show');
+    setStatus('', '');
+    if(submitBtn){
+      submitBtn.disabled=false;
+      submitBtn.classList.remove('loading');
+    }
   };
 
   if(!window.emailjs){
@@ -1720,6 +1822,49 @@ document.querySelectorAll('.btn-amber,.btn-ghost,.c-btn').forEach(b=>{
 
     if(timeEl){
       timeEl.value=new Date().toLocaleString('en-US',{dateStyle:'long',timeStyle:'short'});
+    }
+
+    const fromName=form.querySelector('input[name="from_name"]')?.value || '';
+    const replyTo=form.querySelector('input[name="reply_to"]')?.value || '';
+    const subj=form.querySelector('input[name="subject"]')?.value || '';
+    const msg=form.querySelector('textarea[name="message"]')?.value || '';
+    const timeVal=timeEl?.value || '';
+
+    if(fromEmailEl) fromEmailEl.value=replyTo;
+    if(emailSubjectEl) emailSubjectEl.value=subj ? `Portfolio: ${subj}` : 'Portfolio: New message';
+    if(messageTextEl){
+      messageTextEl.value=
+        `New portfolio message\n\n`+
+        `Name: ${fromName}\n`+
+        `Email: ${replyTo}\n`+
+        `Subject: ${subj}\n`+
+        `Time: ${timeVal}\n\n`+
+        `Message:\n${msg}`;
+    }
+    if(messageHtmlEl){
+      const A='#f59e0b';
+      messageHtmlEl.value=
+        `<!doctype html><html><body style="margin:0;padding:0;background:#0b0d12;">`+
+        `<div style="max-width:640px;margin:0 auto;padding:22px;">`+
+        `<div style="font-family:Arial,Helvetica,sans-serif;background:#111827;border:1px solid rgba(255,255,255,0.10);border-radius:16px;overflow:hidden;">`+
+        `<div style="padding:16px 18px;border-bottom:1px solid rgba(255,255,255,0.08);">`+
+        `<div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:${A};font-weight:700;">Portfolio Contact</div>`+
+        `<div style="font-size:20px;line-height:1.25;color:#f1f5f9;font-weight:800;margin-top:6px;">New message received</div>`+
+        `</div>`+
+        `<div style="padding:16px 18px;color:#e2e8f0;font-size:14px;line-height:1.55;">`+
+        `<table style="width:100%;border-collapse:collapse;">`+
+        `<tr><td style="padding:8px 0;color:#94a3b8;width:110px;">Name</td><td style="padding:8px 0;color:#f1f5f9;">${escapeHtml(fromName)}</td></tr>`+
+        `<tr><td style="padding:8px 0;color:#94a3b8;">Email</td><td style="padding:8px 0;color:#f1f5f9;">${escapeHtml(replyTo)}</td></tr>`+
+        `<tr><td style="padding:8px 0;color:#94a3b8;">Subject</td><td style="padding:8px 0;color:#f1f5f9;">${escapeHtml(subj)}</td></tr>`+
+        `<tr><td style="padding:8px 0;color:#94a3b8;">Time</td><td style="padding:8px 0;color:#f1f5f9;">${escapeHtml(timeVal)}</td></tr>`+
+        `</table>`+
+        `<div style="margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,0.08);">`+
+        `<div style="font-size:12px;letter-spacing:0.12em;text-transform:uppercase;color:#94a3b8;margin-bottom:8px;">Message</div>`+
+        `<div style="white-space:pre-wrap;color:#f1f5f9;">${escapeHtml(msg)}</div>`+
+        `</div>`+
+        `</div>`+
+        `<div style="padding:12px 18px;background:rgba(245,158,11,0.06);border-top:1px solid rgba(245,158,11,0.16);color:#cbd5e1;font-size:12px;">Reply directly to this email address to respond.</div>`+
+        `</div></div></body></html>`;
     }
 
     if(submitBtn) submitBtn.disabled=true;

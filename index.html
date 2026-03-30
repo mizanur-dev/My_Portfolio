@@ -1721,6 +1721,10 @@ footer{
           <input class="c-inp" id="cf_name" type="text" name="from_name" placeholder="John Doe" required />
         </div>
         <div class="c-field">
+          <label class="c-label" for="cf_email">Your Email</label>
+          <input class="c-inp" id="cf_email" type="email" name="reply_to" placeholder="john@example.com" required />
+        </div>
+        <div class="c-field">
           <label class="c-label" for="cf_message">Message</label>
           <textarea class="c-ta" id="cf_message" name="message" placeholder="Tell me about your project or idea..." required></textarea>
         </div>
@@ -1732,7 +1736,6 @@ footer{
         <input type="hidden" name="email_subject" id="cf_email_subject" value="" />
         <input type="hidden" name="message_text" id="cf_message_text" value="" />
         <input type="hidden" name="message_html" id="cf_message_html" value="" />
-        <input type="hidden" name="reply_to" id="cf_reply_to" value="" />
         <input type="hidden" name="subject" id="cf_subject" value="" />
 
         <button class="c-send" type="submit" id="contact-submit">
@@ -1927,7 +1930,6 @@ document.querySelectorAll('.btn-amber,.btn-ghost,.c-btn').forEach(b=>{
   const emailSubjectEl=document.getElementById('cf_email_subject');
   const messageTextEl=document.getElementById('cf_message_text');
   const messageHtmlEl=document.getElementById('cf_message_html');
-  const replyToEl=document.getElementById('cf_reply_to');
   const subjectEl=document.getElementById('cf_subject');
 
   const SERVICE_ID='service_5xaexue';
@@ -1989,7 +1991,6 @@ document.querySelectorAll('.btn-amber,.btn-ghost,.c-btn').forEach(b=>{
     const finalReplyTo=replyTo || 'noreply@portfolio.local';
     const finalSubject=subj || 'New message from portfolio';
 
-    if(replyToEl) replyToEl.value=finalReplyTo;
     if(subjectEl) subjectEl.value=finalSubject;
 
     if(fromEmailEl) fromEmailEl.value=finalReplyTo;
@@ -2035,6 +2036,13 @@ document.querySelectorAll('.btn-amber,.btn-ghost,.c-btn').forEach(b=>{
 
     try{
       const params={
+        // Common names used in many EmailJS examples/templates
+        name: fromName,
+        user_name: fromName,
+        user_email: finalReplyTo,
+        user_message: msg,
+        date_time: timeVal,
+        // Names used by our form / recommended
         from_name: fromName,
         reply_to: finalReplyTo,
         subject: finalSubject,

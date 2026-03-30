@@ -89,7 +89,8 @@ body{
   line-height:1.7;
   overflow-x:hidden;
   -webkit-font-smoothing:antialiased;
-  cursor:none;
+  /* Show system cursor by default, custom cursor overlays only */
+  cursor:default;
 }
 
 /* Subtle noise */
@@ -223,16 +224,16 @@ html, body {
   scroll-behavior: smooth;
   will-change: scroll-position;
   backface-visibility: hidden;
-  /* Enable GPU acceleration for smoother scroll */
-  transform: translateZ(0);
+  /* Remove unnecessary transform for scroll performance */
+  transform: none;
 }
 
 img, .sb-avatar-wrap img, .hero-bg img {
   image-rendering: auto;
   will-change: transform, opacity;
   backface-visibility: hidden;
-  /* Enable GPU acceleration for images */
-  transform: translateZ(0);
+  /* Remove unnecessary transform for images */
+  transform: none;
 }
 .sb-name{
   font-family:'Fraunces',serif;font-weight:800;font-size:1.05rem;
@@ -800,6 +801,170 @@ img, .sb-avatar-wrap img, .hero-bg img {
 }
 .c-btn.primary:hover{transform:translateY(-2px);box-shadow:0 12px 36px rgba(245,158,11,0.42);color:var(--ink-0);}
 
+/* Contact form card (design-inspired) */
+.c-mail{
+  margin:0 auto 26px;
+  max-width:520px;
+  text-align:left;
+  position:relative;z-index:1;
+}
+.c-mail-card{
+  background:rgba(255,255,255,0.025);
+  border:1px solid var(--b0);
+  border-radius:22px;
+  padding:26px 22px;
+  box-shadow:0 24px 64px rgba(0,0,0,.45);
+  backdrop-filter:blur(20px) saturate(140%);
+  overflow:hidden;
+  position:relative;
+}
+.c-mail-card::before{
+  content:'';
+  position:absolute;
+  top:0;left:0;right:0;
+  height:2px;
+  background:linear-gradient(90deg,transparent,var(--a),transparent);
+  opacity:.95;
+}
+.c-eyebrow{
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.6rem;
+  letter-spacing:0.18em;
+  text-transform:uppercase;
+  color:var(--a);
+  margin-bottom:10px;
+  display:flex;align-items:center;gap:10px;
+}
+.c-eyebrow::before{content:'';width:16px;height:1.5px;background:var(--a);display:inline-block;}
+.c-mail-h{
+  font-family:'Fraunces',serif;
+  font-size:1.55rem;
+  font-weight:900;
+  line-height:1.15;
+  margin-bottom:8px;
+}
+.c-mail-h span{color:var(--a);font-style:italic;}
+.c-mail-sub{
+  font-size:0.88rem;
+  color:var(--t1);
+  line-height:1.65;
+  margin-bottom:18px;
+}
+
+.c-mail-form{display:block;}
+.c-field{display:flex;flex-direction:column;gap:6px;margin-bottom:12px;}
+.c-label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.62rem;
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+  color:var(--t2);
+}
+.c-inp, .c-ta{
+  width:100%;
+  font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:0.92rem;
+  background:rgba(255,255,255,0.03);
+  border:1px solid var(--b0);
+  border-radius:11px;
+  color:var(--t0);
+  padding:12px 14px;
+  outline:none;
+  transition:border-color .2s, box-shadow .2s, background .2s;
+}
+.c-inp::placeholder, .c-ta::placeholder{color:var(--t3);}
+.c-inp:focus, .c-ta:focus{
+  border-color:var(--ba);
+  background:rgba(245,158,11,0.03);
+  box-shadow:0 0 0 3px rgba(245,158,11,0.10);
+}
+.c-ta{min-height:120px;resize:none;line-height:1.6;}
+
+.c-hp{display:none !important;}
+
+.c-send{
+  width:100%;
+  margin-top:6px;
+  font-family:'Fraunces',serif;
+  font-size:0.92rem;
+  font-weight:900;
+  letter-spacing:0.02em;
+  padding:12px 14px;
+  background:var(--a);
+  color:var(--ink-0);
+  border:none;
+  border-radius:11px;
+  cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  position:relative;overflow:hidden;
+  transition:filter .2s, transform .15s, box-shadow .2s;
+}
+.c-send:hover{filter:brightness(1.06);box-shadow:0 10px 30px rgba(245,158,11,0.22);transform:translateY(-1px);}
+.c-send:active{transform:translateY(0);}
+.c-send:disabled{opacity:.55;cursor:not-allowed;transform:none;box-shadow:none;}
+.c-send::after{
+  content:'';
+  position:absolute;
+  top:0;left:-120%;
+  width:55%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.18),transparent);
+  transform:skewX(-20deg);
+  transition:left .45s;
+}
+.c-send:hover::after{left:170%;}
+
+.c-spinner{
+  width:17px;height:17px;
+  border:2px solid rgba(0,0,0,.2);
+  border-top-color:var(--ink-0);
+  border-radius:50%;
+  animation:cspin .6s linear infinite;
+  display:none;
+}
+@keyframes cspin{to{transform:rotate(360deg);}}
+.c-send.loading .c-spinner{display:block;}
+.c-send.loading .c-btntext{display:none;}
+
+.c-status{
+  margin-top:10px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.62rem;
+  letter-spacing:0.10em;
+  text-transform:uppercase;
+  color:var(--t2);
+}
+.c-status.success{color:#4ade80;}
+.c-status.error{color:var(--a-l);}
+.c-status.loading{color:var(--t1);}
+
+.c-success{
+  display:none;
+  text-align:center;
+  padding:18px 0 2px;
+}
+.c-success.show{display:block;}
+.c-success-ico{
+  width:58px;height:58px;
+  background:rgba(34,197,94,.09);
+  border:1px solid rgba(34,197,94,.22);
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.35rem;
+  margin:0 auto 12px;
+}
+.c-success h3{
+  font-family:'Fraunces',serif;
+  font-size:1.12rem;
+  font-weight:900;
+  margin-bottom:6px;
+}
+.c-success p{font-size:0.86rem;color:var(--t1);line-height:1.6;}
+
+@media(max-width:520px){
+  .c-mail-card{padding:22px 16px;}
+  .c-mail-h{font-size:1.35rem;}
+}
+
 /* ═══════════════════════════════════════════
    FOOTER
 ═══════════════════════════════════════════ */
@@ -861,6 +1026,13 @@ footer{
   .hero-stats{flex-wrap:wrap;}
   .h-stat{min-width:120px;}
 }
+
+@media(min-width:961px){
+  .sidebar {
+    transform: none !important;
+  }
+}
+
 @media(max-width:520px){
   .skills-grid{grid-template-columns:1fr;}
   .edu-row{grid-template-columns:50px 1fr;}
@@ -949,18 +1121,6 @@ footer{
         loading="eager" decoding="async"
         onerror="this.style.display='none'"/>
     </div>
-    </body>
-    <script>
-    // Loader overlay logic
-    window.addEventListener('DOMContentLoaded', function() {
-      window.addEventListener('load', function() {
-        setTimeout(function() {
-          document.getElementById('loader-overlay').classList.add('hide');
-          document.documentElement.classList.remove('is-loading');
-        }, 700); // Increased loader time for smoother experience
-      });
-    });
-    </script>
     <div class="hero-glow"></div>
     <div class="hero-grid"></div>
 
@@ -1315,6 +1475,53 @@ footer{
         <span class="amber">Something Brilliant</span>
       </h2>
       <p class="c-sub">Open to AI/ML engineering roles, research collaborations, and freelance projects. Based in Dhaka — available globally remote.</p>
+
+      <div class="c-mail">
+        <div class="c-mail-card">
+          <p class="c-eyebrow">Get in Touch</p>
+          <div class="c-mail-h">Send me a <span>message.</span></div>
+          <p class="c-mail-sub">Drop me a message and I'll get back to you soon.</p>
+
+          <form id="contact-form" class="c-mail-form" autocomplete="on">
+            <div class="c-field">
+              <label class="c-label" for="cf_name">Your Name</label>
+              <input class="c-inp" id="cf_name" type="text" name="from_name" placeholder="John Doe" required />
+            </div>
+            <div class="c-field">
+              <label class="c-label" for="cf_email">Your Email</label>
+              <input class="c-inp" id="cf_email" type="email" name="reply_to" placeholder="john@example.com" required />
+            </div>
+            <div class="c-field">
+              <label class="c-label" for="cf_subject">Subject</label>
+              <input class="c-inp" id="cf_subject" type="text" name="subject" placeholder="Project / Collaboration" required />
+            </div>
+            <div class="c-field">
+              <label class="c-label" for="cf_message">Message</label>
+              <textarea class="c-ta" id="cf_message" name="message" placeholder="Tell me about your project or idea..." required></textarea>
+            </div>
+
+            <input class="c-hp" type="text" name="website" tabindex="-1" autocomplete="off" />
+            <input type="hidden" name="to_name" value="Mizanur Rahman" />
+            <input type="hidden" name="time" id="cf_time" value="" />
+
+            <button class="c-send" type="submit" id="contact-submit">
+              <span class="c-btntext">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                Send Message
+              </span>
+              <div class="c-spinner" aria-hidden="true"></div>
+            </button>
+            <div id="contact-status" class="c-status" aria-live="polite"></div>
+          </form>
+
+          <div class="c-success" id="contact-success">
+            <div class="c-success-ico">✅</div>
+            <h3>Message Sent!</h3>
+            <p>Thanks for reaching out.<br/>I'll reply to you shortly.</p>
+          </div>
+        </div>
+      </div>
+
       <div class="c-links">
         <a href="mailto:mizanur.rahman.1cse@gmail.com" class="c-btn primary">
           <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
@@ -1348,7 +1555,39 @@ footer{
 </main>
 </div><!-- /shell -->
 
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script>
+/* ── LOADER OVERLAY ── */
+(()=>{
+  const overlay=document.getElementById('loader-overlay');
+  if(!overlay) return;
+
+  const minVisibleMs=750;  // ensures the loader shows briefly
+  const maxVisibleMs=6000; // safety: never block forever
+  const start=(typeof window.__loadStart==='number') ? window.__loadStart : performance.now();
+  let hidden=false;
+
+  const hide=()=>{
+    if(hidden) return;
+    hidden=true;
+    overlay.classList.add('hide');
+    document.documentElement.classList.remove('is-loading');
+    // Remove after fade to keep DOM clean
+    setTimeout(()=>{ try{ overlay.remove(); }catch(_e){} }, 650);
+  };
+
+  const scheduleHide=()=>{
+    const elapsed=performance.now()-start;
+    const wait=Math.max(0, minVisibleMs-elapsed);
+    setTimeout(hide, wait);
+  };
+
+  // Prefer full page load (images/fonts), but don't block too long.
+  window.addEventListener('load', scheduleHide, { once:true });
+  // Fallback: if load is delayed, still hide eventually.
+  setTimeout(hide, maxVisibleMs);
+})();
+
 /* ── CURSOR ── */
 const dot=document.getElementById('dot'),ring=document.getElementById('ring');
 let mx=0,my=0,rx=0,ry=0;
@@ -1441,6 +1680,67 @@ document.querySelectorAll('.btn-amber,.btn-ghost,.c-btn').forEach(b=>{
   });
   b.addEventListener('mouseleave',()=>{b.style.transform='';});
 });
+
+/* ── EMAILJS CONTACT FORM ── */
+(()=>{
+  const form=document.getElementById('contact-form');
+  if(!form) return;
+
+  const statusEl=document.getElementById('contact-status');
+  const submitBtn=document.getElementById('contact-submit') || form.querySelector('button[type="submit"]');
+  const successEl=document.getElementById('contact-success');
+  const timeEl=document.getElementById('cf_time');
+
+  const SERVICE_ID='service_5xaexue';
+  const TEMPLATE_ID='template_6xkgyre';
+  const PUBLIC_KEY='9V7PEta4tMtZBU_dT';
+
+  const setStatus=(state,text)=>{
+    if(!statusEl) return;
+    statusEl.className='c-status'+(state?(' '+state):'');
+    statusEl.textContent=text||'';
+  };
+
+  if(!window.emailjs){
+    setStatus('error','Email service failed to load.');
+    return;
+  }
+
+  try{ emailjs.init({publicKey:PUBLIC_KEY}); }
+  catch(_e){
+    try{ emailjs.init(PUBLIC_KEY); }
+    catch(__e){ setStatus('error','Email service init failed.'); return; }
+  }
+
+  form.addEventListener('submit',async (e)=>{
+    e.preventDefault();
+
+    const honeypot=form.querySelector('input[name="website"]');
+    if(honeypot && honeypot.value) return;
+
+    if(timeEl){
+      timeEl.value=new Date().toLocaleString('en-US',{dateStyle:'long',timeStyle:'short'});
+    }
+
+    if(submitBtn) submitBtn.disabled=true;
+    if(submitBtn) submitBtn.classList.add('loading');
+    setStatus('loading','Sending…');
+
+    try{
+      await emailjs.sendForm(SERVICE_ID,TEMPLATE_ID,form);
+      setStatus('success','Message sent.');
+      form.reset();
+      form.style.display='none';
+      if(successEl) successEl.classList.add('show');
+    }catch(err){
+      console.error('EmailJS send failed:',err);
+      setStatus('error','Could not send. Please use the Email Me button.');
+    }finally{
+      if(submitBtn) submitBtn.disabled=false;
+      if(submitBtn) submitBtn.classList.remove('loading');
+    }
+  });
+})();
 </script>
 </body>
 </html>
